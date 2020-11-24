@@ -1,0 +1,16 @@
+We're assuming an in-person key exchange. Actual chatting will use symmetrical keys,
+while ID verification will use asymmetric.
+
+to verify ID/ add someone to a group or as a friend,
+the app should have the user send their public key to the other user,
+and recieve one back from them. This asymmetric encryption can be used for DMs.
+Easiest and most popular solution for this is RSA; I don't see a reason not to use it.
+
+Since multiple parties need to see group texts, we should use symmetric key encryption
+(Otherwise we'd have to send the message to each person individually, which defeats the point)
+AES-128 is a very good solution for this, but has one key flaw: key exhaustion
+to defeat key exhaustion, the symmetric key will either need to be refreshed every couple days,
+or a new one will need to be distributed often in the case of in-person groups.
+
+My suggestion is that we use cryptlib for this application, as it's open-source and open-license(sleepycat license),
+and supports both RSA and AES-128.

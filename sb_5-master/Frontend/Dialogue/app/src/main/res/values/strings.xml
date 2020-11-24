@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Dialogue</string>
+    <string name="User">Username</string>
+    <string name="subject">Password</string>
+    <string name="Password">Password</string>
+    <string name="send">Login</string>
+    <string name="message" />
+    <string name="newUser">Enter Username</string>
+    <string name="EnterPassword">Enter Password</string>
+    <string name="ReenterPassword">Reenter Password</string>
+</resources>

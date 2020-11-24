@@ -1,0 +1,37 @@
+stages:
+ -gradlebuild
+ -gradletest
+ -autodeploy
+
+gradle-build:
+ stage: gradlebuild
+ tags:
+  -BACKEND
+ script:
+  -cd Backend/Practice/ServerConnectTest
+  - ./gradlew build
+
+gradle-test:
+ stage: gradletest
+ tags:
+  -BACKEND
+ script:
+  -cd Backend/Practice/ServerConnectTest
+  -./gradlew clean test
+  -./gradlew build
+ artifacts:
+  paths:
+   - Backend/practice/ServerConnectTest/build/libs/*.jar
+autoDeploy:
+ stage: autodeploy
+ tags: 
+  -BACKEND
+ script:
+  -cd Backend/Practice/ServerConnectTest
+  -./gradlew test
+  -./gradlew build
+  -sudo mv target/*.jar /target/web-demo.jar
+  -sudo systemctl stop system-web-demo
+  -sudo systemctl start system-web-demo
+ only:
+  - master

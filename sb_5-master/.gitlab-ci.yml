@@ -1,0 +1,74 @@
+stages:
+ - gradlebuild
+ - gradletest
+ - androidbuild
+ - androidtest
+ - autodeploy
+
+gradlebuild:
+ stage: gradlebuild
+ tags:
+  - BACKEND
+ script:
+  - cd Backend/practice/ServerConnectTest/
+  - chmod +x ./gradlew
+  - ./gradlew assemble
+
+gradletest:
+ stage: gradletest
+ tags:
+  - BACKEND
+ script:
+  - cd Backend/practice/ServerConnectTest/
+  - chmod +x ./gradlew
+  - ./gradlew test
+  - ./gradlew assemble
+ artifacts:
+  paths:
+  - Backend/practice/ServerConnectTest/*.jar
+
+autodeploy:
+ stage: autodeploy
+ tags: 
+  - BACKEND
+ script:
+  - cd Backend/practice/ServerConnectTest/
+  - chmod +x ./gradlew
+  - ./gradlew test
+  - ./gradlew assemble
+  - sudo mv build/libs/*.jar /target/new-service.jar
+  - sudo systemctl stop new-service
+  - sudo systemctl start new-service
+ only:
+  refs:
+   - master
+   
+android-build:
+ image: javiersantos/android-ci:latest
+ stage: androidbuild
+ before_script:
+  - export GRADLE_USER_HOME='pwd'/.gradle
+  - chmod +x ./Frontend/Dialogue/gradlew
+ tags:
+  - FRONTEND
+ script:
+  - cd Frontend/Dialogue
+  - ./gradlew assemble
+ artifacts:
+  paths:
+   - Dialogue/app/build/outputs/
+   
+androidtests:
+ image: javiersantos/android-ci:latest
+ stage: androidtest
+ before_script:
+  - export GRADLE_USER_HOME='pwd'/.gradle
+  - chmod +x ./Frontend/Dialogue/gradlew
+ tags:
+  - FRONTEND
+ script:
+  - cd Frontend/Dialogue
+  - ./gradlew test
+ only:
+  refs:
+   - master
